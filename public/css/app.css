@@ -1,0 +1,29 @@
+#container {
+    text-align: center;
+}
+
+#video-container {
+}
+
+#local-video {
+    height: 200px;
+    width: 200px;
+}
+
+input[type=button] {
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #0d2677;
+    color: white;
+    font-size: 18px;
+}
+
+input[type=button]:disabled {
+    background-color: #484e57;
+    color: #8f8f8f;
+}
+
+input[type=button]:active {
+    background-color: #0a3e77;
+}

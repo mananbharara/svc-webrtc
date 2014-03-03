@@ -2,9 +2,19 @@
 <html>
 <head>
   <title></title>
-  <script type="text/javascript" src="main.js"></script>
+  <link rel="stylesheet" href="css/app.css">
+  <script type="text/javascript" src="js/bootstrap-with-server.js"></script>
+
 </head>
 <body>
-  <video id="video" autoplay></video>
+<div id="container">
+  <input id="startButton" type="button" value="Start"/>
+  <br/>
+
+  <div id="video-container">
+    <video id="remote-video" autoplay></video>
+    <video id="local-video" autoplay></video>
+  </div>
+</div>
 </body>
 </html>

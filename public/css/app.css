@@ -2,9 +2,6 @@
     text-align: center;
 }
 
-#video-container {
-}
-
 #local-video {
     height: 200px;
     width: 200px;
@@ -19,7 +16,7 @@ input[type=button] {
     font-size: 18px;
 }
 
-input[type=button]:disabled {
+input[type=button]:disabled, input[type=button]:disabled:active {
     background-color: #484e57;
     color: #8f8f8f;
 }

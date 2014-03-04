@@ -1,4 +1,4 @@
-var util = require('util'), WebSocketServer = require('ws').Server, wss = new WebSocketServer({port: 8000}), connect = require('connect'), socket;
+var util = require('util'), WebSocketServer = require('ws').Server, wss = new WebSocketServer({port: 8000}), connect = require('connect');
 
 wss.broadcast = function(data) {
   for(var i in this.clients)

@@ -1,15 +1,11 @@
 var pc1, pc2;
 
-var sdpConstraints = {'mandatory': {
-  'OfferToReceiveAudio': true,
-  'OfferToReceiveVideo': true }};
-
 function call(stream) {
   var servers = null;
-  pc1 = new webkitRTCPeerConnection(servers);
+  pc1 = new RTCPeerConnection(servers);
   pc1.onicecandidate = iceCallback1;
 
-  pc2 = new webkitRTCPeerConnection(servers);
+  pc2 = new RTCPeerConnection(servers);
   pc2.onicecandidate = iceCallback2;
   pc2.onaddstream = gotRemoteStream;
 
@@ -26,8 +22,8 @@ function call(stream) {
       pc1.setRemoteDescription(answerDesc);
     };
 
-    pc2.createAnswer(gotDescriptionPC2);
-  });
+    pc2.createAnswer(gotDescriptionPC2, errorLogger);
+  }, errorLogger);
 
   function iceCallback1(event) {
     if (event.candidate) {
@@ -48,15 +44,18 @@ function call(stream) {
 }
 
 document.onreadystatechange = function (e) {
-  if (document.readyState === 'complete') {
-    var button = document.getElementById('startButton');
-    button.onclick = function () {
-      this.disabled = true;
-      navigator.webkitGetUserMedia({video: true}, function (stream) {
-        document.getElementById('local-video').src = URL.createObjectURL(stream);
-        call(stream);
-      });
-    };
-  }
+  if (document.readyState !== 'complete')
+    return;
+
+  document.getElementById('start-button').onclick = function () {
+    this.disabled = true;
+    navigator.getUserMedia({video: true}, function (stream) {
+      document.getElementById('local-video').src = URL.createObjectURL(stream);
+      call(stream);
+    }, errorLogger);
+  };
 };
 
+function errorLogger(error) {
+  console.log('Something broke with: ', error);
+}

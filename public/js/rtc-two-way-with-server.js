@@ -1,22 +1,36 @@
-var user = 'user' + Math.random() * 1000, socket, pc;
+var user = 'user' + parseInt(Math.random() * 1000, 10), socket, pc, localStream;
 
 document.onreadystatechange = function () {
-  if (document.readyState === 'complete') {
-    setupPeerConnectionObject();
-    setupSocketConnection();
+  if (document.readyState !== 'complete')
+    return;
 
-    document.getElementById('startButton').onclick = function () {
-      this.disabled = true;
-      navigator.webkitGetUserMedia({video: true}, function (stream) {
-        document.getElementById('local-video').src = URL.createObjectURL(stream);
-        call(stream);
-      });
-    };
-  }
+  document.getElementById('local-video').muted = 'muted';
+  setupPeerConnectionObject();
+  setupSocketConnection();
+
+  document.getElementById('start-button').onclick = function () {
+    this.disabled = true;
+    startLocalStream();
+  };
+
+  document.getElementById('call-button').onclick = function () {
+    this.disabled = true;
+    call();
+  };
 };
 
+function startLocalStream() {
+  navigator.getUserMedia({video: true, audio: true}, onMediaSuccess, errorLogger);
+
+  function onMediaSuccess(stream) {
+    localStream = stream;
+    document.getElementById('local-video').src = URL.createObjectURL(stream);
+    document.getElementById('call-button').disabled = false;
+  }
+}
+
 function setupPeerConnectionObject() {
-  pc = new webkitRTCPeerConnection(null);
+  pc = new RTCPeerConnection(null);
 
   pc.onicecandidate = function (evt) {
     socket.send(JSON.stringify({"user": user, "candidate": evt.candidate}));
@@ -50,19 +64,25 @@ function setupSocketConnection() {
 }
 
 function answer(offerSDP) {
+  pc.addStream(localStream);
+
   pc.setRemoteDescription(new RTCSessionDescription(offerSDP));
 
   pc.createAnswer(function (desc) {
     pc.setLocalDescription(desc);
     socket.send(JSON.stringify({"user": user, "answerSDP": desc}));
-  });
+  }, errorLogger);
 }
 
-function call(stream) {
-  pc.addStream(stream);
+function call() {
+  pc.addStream(localStream);
 
   pc.createOffer(function (desc) {
     pc.setLocalDescription(desc);
     socket.send(JSON.stringify({"user": user, "offerSDP": desc}));
-  });
+  }, errorLogger);
+}
+
+function errorLogger(error) {
+  console.log('Something broke with: ', error);
 }

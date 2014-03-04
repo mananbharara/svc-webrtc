@@ -3,12 +3,16 @@
 <head>
   <title></title>
   <link rel="stylesheet" href="css/app.css">
-  <script type="text/javascript" src="js/bootstrap-with-server.js"></script>
+  <script type="text/javascript" src="js/adapter.js"></script>
+  <!--<script type="text/javascript" src="js/rtc-without-server.js"></script>-->
+  <!--<script type="text/javascript" src="js/rtc-one-way-with-server.js"></script>-->
+  <script type="text/javascript" src="js/rtc-two-way-with-server.js"></script>
 
 </head>
 <body>
 <div id="container">
-  <input id="startButton" type="button" value="Start"/>
+  <input id="start-button" type="button" value="Start"/>
+  <input id="call-button" type="button" value="Call" disabled/>
   <br/>
 
   <div id="video-container">

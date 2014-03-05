@@ -1,0 +1,28 @@
+{
+  "name": "svc",
+  "version": "0.0.1",
+  "description": "Simple video conferencing using WebRTC",
+  "main": "bootstrap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mananbharara/WebRTCSample.git"
+  },
+  "keywords": [
+    "webrtc"
+  ],
+  "author": "Manan",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mananbharara/WebRTCSample/issues"
+  },
+  "dependencies": {
+    "ws": "~0.4.31",
+    "connect": "~2.13.0"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}

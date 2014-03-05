@@ -42,7 +42,7 @@ function setupPeerConnectionObject() {
 }
 
 function setupSocketConnection() {
-  socket = new WebSocket(['ws:', '//', location.hostname, ':8000'].join(''));
+  socket = new WebSocket(['ws:', '//', location.host].join(''));
 
   socket.onopen = function (e) {
     console.log('Connection established', e);

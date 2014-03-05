@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "ws": "~0.4.31",
-    "connect": "~2.13.0"
+    "express": "~3.0.0"
   },
   "engines": {
     "node": "0.10.x"

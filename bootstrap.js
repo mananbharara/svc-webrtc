@@ -13,4 +13,4 @@ wss.on('connection', function (ws) {
   });
 });
 
-connect.createServer(connect.static(__dirname)).listen(3000);
+connect.createServer(connect.static(__dirname)).listen(process.env.PORT || 5000);

@@ -5,6 +5,11 @@ app.use(express.static(__dirname + '/public'));
 
 server.listen(process.env.PORT || 8080);
 
+io.configure(function () {
+  io.set('transports', ['websocket']);
+  io.set('log level', 2);
+});
+
 io.sockets.on('connection', function (socket) {
   util.log('New connection:' + socket.id);
 

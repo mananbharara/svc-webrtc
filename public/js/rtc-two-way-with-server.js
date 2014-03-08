@@ -33,7 +33,7 @@ function setupPeerConnectionObject() {
   pc = new RTCPeerConnection(null);
 
   pc.onicecandidate = function (evt) {
-    socket.send(JSON.stringify({"user": user, "candidate": evt.candidate}));
+    socket.emit('message', {"user": user, "candidate": evt.candidate});
   };
 
   pc.onaddstream = function (evt) {
@@ -42,17 +42,13 @@ function setupPeerConnectionObject() {
 }
 
 function setupSocketConnection() {
-  socket = new WebSocket(['ws:', '//', location.host].join(''));
+  socket = io.connect(location.origin, {transports: ['websocket']});
 
-  socket.onopen = function (e) {
+  socket.on('connect', function (e) {
     console.log('Connection established', e);
-  };
+  });
 
-  socket.onmessage = function (evt) {
-    var signal = JSON.parse(evt.data);
-    if (signal.user === user)
-      return;
-
+  socket.on('message', function (signal) {
     if (signal.offerSDP)
       answer(signal.offerSDP);
     else if (signal.answerSDP) {
@@ -60,7 +56,7 @@ function setupSocketConnection() {
     }
     else if (signal.candidate)
       pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
-  };
+  });
 }
 
 function answer(offerSDP) {
@@ -70,7 +66,7 @@ function answer(offerSDP) {
 
   pc.createAnswer(function (desc) {
     pc.setLocalDescription(desc);
-    socket.send(JSON.stringify({"user": user, "answerSDP": desc}));
+    socket.emit('message', {"user": user, "answerSDP": desc});
   }, errorLogger);
 }
 
@@ -79,7 +75,7 @@ function call() {
 
   pc.createOffer(function (desc) {
     pc.setLocalDescription(desc);
-    socket.send(JSON.stringify({"user": user, "offerSDP": desc}));
+    socket.emit('message', {"user": user, "offerSDP": desc});
   }, errorLogger);
 }
 

@@ -1,21 +1,14 @@
-var WebSocketServer = require('ws').Server, http = require('http'), express = require('express'),
-  app = express(), util = require('util');
+var express = require('express'), app = express(), server = require('http').createServer(app), io = require('socket.io').listen(server),
+  util = require('util');
 
 app.use(express.static(__dirname + '/public'));
 
-var server = http.createServer(app);
 server.listen(process.env.PORT || 8080);
 
-var wss = new WebSocketServer({server: server});
-wss.broadcast = function (data) {
-  for (var i in this.clients)
-    this.clients[i].send(data);
-};
+io.sockets.on('connection', function (socket) {
+  util.log('New connection:' + socket.id);
 
-wss.on('connection', function (ws) {
-  util.log('New connection:' + ws.toString());
-  ws.on('message', function (message) {
-    ws.send(message);
-    wss.broadcast(message);
+  socket.on('message', function (message) {
+    this.broadcast.emit('message', message);
   });
 });

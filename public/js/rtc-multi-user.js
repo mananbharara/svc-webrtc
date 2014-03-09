@@ -1,4 +1,4 @@
-var localStream, user = 'user' + parseInt(Math.random() * 1000), socket, liveUsers = {}, connections = {};
+var localStream, user = 'user' + parseInt(Math.random() * 1000), socket, liveUsers = {}, calls = {}, answers = {};
 
 document.onreadystatechange = function () {
   if (document.readyState !== 'complete')
@@ -12,12 +12,12 @@ document.onreadystatechange = function () {
   };
 };
 
-function setupPeerConnectionObject(remote) {
+function setupPeerConnectionObject(remote, fromCaller) {
   var pc = new RTCPeerConnection(null);
 
   pc.onicecandidate = function (evt) {
     if (evt.candidate)
-      socket.emit('ice candidate', {from: user, to: remote, "candidate": evt.candidate});
+      socket.emit('ice candidate', {fromCaller: fromCaller, from: user, to: remote, "candidate": evt.candidate});
   };
 
   pc.onaddstream = function (evt) {
@@ -50,17 +50,20 @@ function setupSocketMessaging() {
   });
 
   socket.on('ice candidate', function (iceCandidate) {
-    connections[iceCandidate.from].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
+    if (iceCandidate.fromCaller)
+      answers[iceCandidate.from].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
+    else
+      calls[iceCandidate.from].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
   });
 
   socket.on('answer', function (answer) {
-    connections[answer.from].setRemoteDescription(new RTCSessionDescription(answer.answerSDP));
+    calls[answer.from].setRemoteDescription(new RTCSessionDescription(answer.answerSDP));
   });
 }
 
 function start() {
   function call(remoteUser) {
-    var pc = connections[remoteUser] = setupPeerConnectionObject(remoteUser);
+    var pc = calls[remoteUser] = setupPeerConnectionObject(remoteUser, true);
 
     pc.addStream(localStream);
 
@@ -71,7 +74,7 @@ function start() {
   }
 
   Object.keys(liveUsers).forEach(function (remoteUser) {
-    if (remoteUser === user || (remoteUser in connections))
+    if (remoteUser === user || (remoteUser in calls))
       return;
 
     call(remoteUser);
@@ -79,9 +82,7 @@ function start() {
 }
 
 function answer(offer) {
-  var pc = connections[offer.from] = setupPeerConnectionObject(offer.from);
-
-  pc.addStream(localStream);
+  var pc = answers[offer.from] = setupPeerConnectionObject(offer.from, false);
 
   pc.setRemoteDescription(new RTCSessionDescription(offer.offerSDP));
 
@@ -94,7 +95,8 @@ function answer(offer) {
 }
 
 function setLocalStream() {
-  navigator.getUserMedia({video: true}, function (stream) {
+  document.getElementById('local-video').muted = 'muted';
+  navigator.getUserMedia({audio: true, video: true}, function (stream) {
     localStream = stream;
     document.getElementById('local-video').src = URL.createObjectURL(localStream);
     document.getElementById('call-button').disabled = '';

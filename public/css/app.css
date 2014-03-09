@@ -2,9 +2,23 @@
     text-align: center;
 }
 
+.remote-video {
+    margin: 2%;
+}
+
 #local-video {
+    position: fixed;
+    bottom: 0;
+    right: 2%;
     height: 200px;
     width: 200px;
+}
+
+video {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 input[type=button] {

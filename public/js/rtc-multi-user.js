@@ -12,8 +12,16 @@ document.onreadystatechange = function () {
   };
 };
 
+var servers = {
+  'iceServers': [
+    {
+      'url': 'stun:stun.example.org'
+    }
+  ]
+};
+
 function setupPeerConnectionObject(remote, fromCaller) {
-  var pc = new RTCPeerConnection(null);
+  var pc = new RTCPeerConnection(servers);
 
   pc.onicecandidate = function (evt) {
     if (evt.candidate)

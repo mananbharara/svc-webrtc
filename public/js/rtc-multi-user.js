@@ -16,8 +16,10 @@ function setupPeerConnectionObject(remote, fromCaller) {
   var pc = new RTCPeerConnection(iceServers, optional);
 
   pc.onicecandidate = function (evt) {
-    if (evt.candidate)
+    if (evt.candidate && (evt.candidate.candidate.indexOf('srflx') != -1)) {
+      console.log('STUN candidate being used');
       socket.emit('ice candidate', {fromCaller: fromCaller, from: user, to: remote, "candidate": evt.candidate});
+    }
   };
 
   pc.onaddstream = function (evt) {

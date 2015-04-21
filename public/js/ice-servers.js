@@ -10,7 +10,7 @@ var TURN = {
 };
 
 var iceServers = {
-  iceServers: [STUN, TURN]
+  iceServers: [STUN]
 };
 
 // DTLS/SRTP is preferred on chrome

@@ -1,18 +1,26 @@
+body {
+    margin: 0;
+    background-image: url('../images/grey_wash_wall.png');
+}
+
 #container {
     text-align: center;
 }
 
 .remote-video {
     margin: 2%;
+    height: 480px;
+    width: 640px;
 }
 
 #local-video {
     position: fixed;
     bottom: 0;
     right: 2%;
-    height: 200px;
+    height: 150px;
     width: 200px;
     z-index: 5;
+    margin-bottom: 20px;
 }
 
 video {
@@ -20,6 +28,7 @@ video {
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+    box-shadow: 0 0 1em black;
 }
 
 input[type=button] {

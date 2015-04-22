@@ -7,6 +7,9 @@ function MeetingHandler(meetingId) {
   $('#call-button').click(function () {
     start();
   });
+  $('#share-link').click(function() {
+    window.prompt("Copy and press Enter", location.href);
+  });
 
   function setupPeerConnectionObject(remote, fromCaller) {
     var pc = new RTCPeerConnection(iceServers, optional);

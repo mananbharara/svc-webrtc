@@ -29,6 +29,7 @@ input[type=button] {
     background-color: #0d2677;
     color: white;
     font-size: 18px;
+    margin: 20px;
 }
 
 input[type=button]:disabled, input[type=button]:disabled:active {

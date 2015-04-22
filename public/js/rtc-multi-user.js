@@ -17,7 +17,8 @@ function setupPeerConnectionObject(remote, fromCaller) {
 
   pc.onicecandidate = function (evt) {
     if (evt.candidate && (evt.candidate.candidate.indexOf('relay') == -1)) {
-      console.log('STUN candidate being used');
+      if (evt.candidate.candidate.indexOf('typ host') != -1)
+        console.log('Local call! :D');
       socket.emit('ice candidate', {fromCaller: fromCaller, from: user, to: remote, "candidate": evt.candidate});
     }
   };

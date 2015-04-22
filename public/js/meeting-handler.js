@@ -4,9 +4,9 @@ function MeetingHandler(meetingId) {
   setLocalStream();
   setupSocketMessaging();
 
-  document.getElementById('call-button').onclick = function () {
+  $('#call-button').click(function () {
     start();
-  };
+  });
 
   function setupPeerConnectionObject(remote, fromCaller) {
     var pc = new RTCPeerConnection(iceServers, optional);
@@ -20,12 +20,12 @@ function MeetingHandler(meetingId) {
     };
 
     pc.onaddstream = function (evt) {
-      var remoteVideo = document.createElement('video');
-      remoteVideo.className = 'remote-video';
-      remoteVideo.autoplay = true;
-      remoteVideo.src = URL.createObjectURL(evt.stream);
+      var remoteVideo = $('<video>').attr({
+        autoplay: true,
+        src: URL.createObjectURL(evt.stream)
+      }).addClass('remote-video');
 
-      document.getElementById('video-container').appendChild(remoteVideo);
+      $('#video-container').append(remoteVideo);
     };
 
     return pc;
@@ -40,7 +40,7 @@ function MeetingHandler(meetingId) {
       socket.emit('join', {meetingId: meetingId});
     });
 
-    socket.on('participants', function(data) {
+    socket.on('participants', function (data) {
       participants = data;
       console.log('Participants in this meeting: ', participants);
     });
@@ -95,11 +95,13 @@ function MeetingHandler(meetingId) {
   }
 
   function setLocalStream() {
-    document.getElementById('local-video').muted = 'muted';
+    var localVideo = $('#local-video'), callButton = $('#call-button');
+
+    localVideo.attr({muted: 'muted'});
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
       localStream = stream;
-      document.getElementById('local-video').src = URL.createObjectURL(localStream);
-      document.getElementById('call-button').disabled = '';
+      localVideo.attr({src: URL.createObjectURL(localStream)});
+      callButton.removeAttr('disabled');
     }, logError);
   }
 

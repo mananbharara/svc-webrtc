@@ -2,10 +2,13 @@ var express = require('express'),
   app = express(),
   server = app.listen(process.env.PORT || 8080),
   io = require('socket.io').listen(server),
+  MeetingHandlers = require('./handler/meeting.js'),
   util = require('util'),
   liveUsers = {};
 
 app.use(express.static(__dirname + '/public'));
+
+app.post('/meetings', MeetingHandlers.create);
 
 server.listen(process.env.PORT || 8080);
 

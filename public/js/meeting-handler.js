@@ -7,7 +7,7 @@ function MeetingHandler(meetingId) {
   $('#call-button').click(function () {
     start();
   });
-  $('#share-link').click(function() {
+  $('#share-link').click(function () {
     window.prompt("Copy and press Enter", location.href);
   });
 
@@ -100,7 +100,7 @@ function MeetingHandler(meetingId) {
   function setLocalStream() {
     var localVideo = $('#local-video'), callButton = $('#call-button');
 
-    localVideo.attr({muted: 'muted'});
+    localVideo.prop('muted', true);
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
       localStream = stream;
       localVideo.attr({src: URL.createObjectURL(localStream)});

@@ -5,6 +5,15 @@ var express = require('express'),
   MeetingHandlers = require('./handler/meeting.js'),
   util = require('util');
 
+if (process.env.PRODUCTION) {
+  app.get('*', function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] != 'https')
+      res.redirect('https://' + req.get('host') + req.originalUrl);
+    else
+      next();
+  });
+}
+
 app.use(express.static(__dirname + '/public'));
 
 app.post('/meetings', MeetingHandlers.create);

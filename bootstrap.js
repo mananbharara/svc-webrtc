@@ -1,14 +1,15 @@
-var express = require('express'), app = express(), server = require('http').createServer(app), io = require('socket.io').listen(server),
-  util = require('util'), liveUsers = {};
+var express = require('express'),
+  app = express(),
+  server = app.listen(process.env.PORT || 8080),
+  io = require('socket.io').listen(server),
+  util = require('util'),
+  liveUsers = {};
 
 app.use(express.static(__dirname + '/public'));
 
 server.listen(process.env.PORT || 8080);
 
-io.configure(function () {
-  io.set('transports', ['websocket']);
-  io.set('log level', 2);
-});
+io.set('transports', ['websocket']);
 
 io.sockets.on('connection', function (socket) {
   util.log('New connection:' + socket.id);
@@ -26,17 +27,17 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('offer', function (offer) {
     var destinationSocket = liveUsers[offer.to];
-    io.sockets.socket(destinationSocket).emit('offer', offer);
+    io.sockets.connected[destinationSocket].emit('offer', offer);
   });
 
   socket.on('answer', function (answer) {
     var destinationSocket = liveUsers[answer.to];
-    io.sockets.socket(destinationSocket).emit('answer', answer);
+    io.sockets.connected[destinationSocket].emit('answer', answer);
   });
 
   socket.on('ice candidate', function (iceCandidate) {
     var destinationSocket = liveUsers[iceCandidate.to];
-    io.sockets.socket(destinationSocket).emit('ice candidate', iceCandidate);
+    io.sockets.connected[destinationSocket].emit('ice candidate', iceCandidate);
   });
 
   socket.on('message', function (message) {
@@ -45,6 +46,6 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('identity', function (identity) {
     liveUsers[identity.user] = socket.id;
-    io.sockets.emit('live users', liveUsers);
+    io.emit('live users', liveUsers);
   });
 });

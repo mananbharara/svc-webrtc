@@ -19,10 +19,10 @@
     "url": "https://github.com/mananbharara/WebRTCSample/issues"
   },
   "dependencies": {
-    "express": "~3.0.0",
-    "socket.io": "~0.9.16"
+    "express": "latest",
+    "socket.io": "latest"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "latest"
   }
 }

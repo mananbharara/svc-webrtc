@@ -1,10 +1,5 @@
 function MeetingHandler(meetingId) {
-  var localStream,
-    user = 'user' + parseInt(Math.random() * 1000),
-    socket,
-    liveUsers = {},
-    calls = {},
-    answers = {};
+  var localStream, me, socket, calls = {}, answers = {}, participants = [];
 
   setLocalStream();
   setupSocketMessaging();
@@ -20,7 +15,7 @@ function MeetingHandler(meetingId) {
       if (evt.candidate && (evt.candidate.candidate.indexOf('relay') == -1)) {
         if (evt.candidate.candidate.indexOf('typ host') != -1)
           console.log('Local call! :D');
-        socket.emit('ice candidate', {fromCaller: fromCaller, from: user, to: remote, "candidate": evt.candidate});
+        socket.emit('ice candidate', {fromCaller: fromCaller, from: me, to: remote, "candidate": evt.candidate});
       }
     };
 
@@ -41,12 +36,13 @@ function MeetingHandler(meetingId) {
 
     socket.on('connect', function () {
       console.log('Connection established');
-      socket.emit('identity', {user: user});
+      me = socket.io.engine.id;
+      socket.emit('join', {meetingId: meetingId});
     });
 
-    socket.on('live users', function (users) {
-      console.log('Users', users);
-      liveUsers = users;
+    socket.on('participants', function(data) {
+      participants = data;
+      console.log('Participants in this meeting: ', participants);
     });
 
     socket.on('offer', function (offer) {
@@ -73,12 +69,12 @@ function MeetingHandler(meetingId) {
 
       pc.createOffer(function (desc) {
         pc.setLocalDescription(desc);
-        socket.emit('offer', {"from": user, "to": remoteUser, "offerSDP": desc});
+        socket.emit('offer', {"from": me, "to": remoteUser, "offerSDP": desc});
       }, logError);
     }
 
-    Object.keys(liveUsers).forEach(function (remoteUser) {
-      if (remoteUser === user || (remoteUser in calls))
+    participants.forEach(function (remoteUser) {
+      if (remoteUser === me || (remoteUser in calls))
         return;
 
       call(remoteUser);
@@ -92,7 +88,7 @@ function MeetingHandler(meetingId) {
 
     pc.createAnswer(function (desc) {
       pc.setLocalDescription(desc);
-      socket.emit('answer', {'from': user, 'to': offer.from, "answerSDP": desc});
+      socket.emit('answer', {'from': me, 'to': offer.from, "answerSDP": desc});
     }, logError);
 
     start();

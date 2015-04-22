@@ -4,8 +4,8 @@ Path.map('#/').to(function () {
   });
 });
 
-Path.map('#/:meetingNumber').to(function() {
-  MeetingHandler();
+Path.map('#/:meetingId').to(function() {
+  MeetingHandler(this.params.meetingId);
 });
 
 Path.root('#/');

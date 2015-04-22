@@ -3,8 +3,7 @@ var express = require('express'),
   server = app.listen(process.env.PORT || 8080),
   io = require('socket.io').listen(server),
   MeetingHandlers = require('./handler/meeting.js'),
-  util = require('util'),
-  liveUsers = {};
+  util = require('util');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -17,38 +16,31 @@ io.set('transports', ['websocket']);
 io.sockets.on('connection', function (socket) {
   util.log('New connection:' + socket.id);
 
-  socket.on('disconnect', function () {
-    for (var key in liveUsers) {
-      if (liveUsers[key] === this.id) {
-        delete liveUsers[key];
-        break;
-      }
-    }
-
-    io.sockets.emit('live users', liveUsers);
-  });
-
   socket.on('offer', function (offer) {
-    var destinationSocket = liveUsers[offer.to];
-    io.sockets.connected[destinationSocket].emit('offer', offer);
+    sendToSocket(offer.to, {'offer': offer});
   });
 
   socket.on('answer', function (answer) {
-    var destinationSocket = liveUsers[answer.to];
-    io.sockets.connected[destinationSocket].emit('answer', answer);
+    sendToSocket(answer.to, {'answer': answer});
   });
 
   socket.on('ice candidate', function (iceCandidate) {
-    var destinationSocket = liveUsers[iceCandidate.to];
-    io.sockets.connected[destinationSocket].emit('ice candidate', iceCandidate);
+    sendToSocket(iceCandidate.to, {'ice candidate': iceCandidate});
   });
 
-  socket.on('message', function (message) {
-    this.broadcast.emit('message', message);
+  socket.on('join', function (identity) {
+    socket.join(identity.meetingId, function () {
+      io.to(identity.meetingId).emit('participants', Object.keys(io.sockets.adapter.rooms[identity.meetingId]));
+    });
   });
 
-  socket.on('identity', function (identity) {
-    liveUsers[identity.user] = socket.id;
-    io.emit('live users', liveUsers);
-  });
+  function sendToSocket(socketId, message) {
+    var socket = io.sockets.connected[socketId];
+    if (!socket) {
+      util.log('Socket doesn\'t exist: ', socketId);
+      return;
+    }
+    socket.emit(Object.keys(message)[0], message[Object.keys(message)[0]]);
+  }
 });
+

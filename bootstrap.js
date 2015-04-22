@@ -25,6 +25,12 @@ io.set('transports', ['websocket']);
 io.sockets.on('connection', function (socket) {
   util.log('New connection:' + socket.id);
 
+  socket.on('disconnect', function () {
+    var participants = io.sockets.adapter.rooms[socket.meetingId];
+    if (participants)
+      io.to(socket.meetingId).emit('participants', Object.keys(participants));
+  });
+
   socket.on('offer', function (offer) {
     sendToSocket(offer.to, {'offer': offer});
   });
@@ -39,6 +45,7 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('join', function (identity) {
     socket.join(identity.meetingId, function () {
+      socket.meetingId = identity.meetingId;
       io.to(identity.meetingId).emit('participants', Object.keys(io.sockets.adapter.rooms[identity.meetingId]));
     });
   });

@@ -8,7 +8,7 @@ function MeetingHandler(meetingId) {
     start();
   });
   $('#share-link').click(function () {
-    window.prompt("Copy and press Enter", location.href);
+    window.prompt("Use Ctrl+C or Cmd+C to copy. Then press enter.", location.href);
   });
 
   function setupPeerConnectionObject(remote, fromCaller) {

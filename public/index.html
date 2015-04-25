@@ -16,14 +16,13 @@
   <script type="text/javascript" src="js/meeting-handler.js"></script>
 </head>
 <body>
-<div id="container">
-  <input id="call-button" type="button" value="Start" disabled/>
-  <br/>
-  <a href="javascript:void(0);" id="share-link">Share</a>
-
-  <div id="video-container">
-    <video id="local-video" autoplay></video>
-  </div>
+<div id="button-container">
+  <button id="call-button" disabled>START</button>
+  <button id="share-link" disabled></button>
+  <div class="clear-both"></div>
+</div>
+<div id="video-container">
+  <video id="local-video" autoplay></video>
 </div>
 </body>
 </html>

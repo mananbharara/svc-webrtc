@@ -98,13 +98,14 @@ function MeetingHandler(meetingId) {
   }
 
   function setLocalStream() {
-    var localVideo = $('#local-video'), callButton = $('#call-button');
+    var localVideo = $('#local-video'), callButton = $('#call-button'), shareLink = $('#share-link');
 
     localVideo.prop('muted', true);
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
       localStream = stream;
       localVideo.attr({src: URL.createObjectURL(localStream)});
       callButton.removeAttr('disabled');
+      shareLink.removeAttr('disabled');
     }, logError);
   }
 

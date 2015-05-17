@@ -16,14 +16,13 @@ function MeetingHandler(meetingId) {
 
     pc.onicecandidate = function (evt) {
       if (evt.candidate && (evt.candidate.candidate.indexOf('relay') == -1)) {
-        if (evt.candidate.candidate.indexOf('typ host') != -1)
-          console.log('Local call! :D');
         socket.emit('ice candidate', {fromCaller: fromCaller, from: me, to: remote, "candidate": evt.candidate});
       }
     };
 
     pc.onaddstream = function (evt) {
       var remoteVideo = $('<video>').attr({
+        id: 'video-' + remote,
         autoplay: true,
         src: URL.createObjectURL(evt.stream)
       }).addClass('remote-video');
@@ -44,6 +43,7 @@ function MeetingHandler(meetingId) {
     });
 
     socket.on('participants', function (data) {
+      updateParticipants(data);
       participants = data;
       console.log('Participants in this meeting: ', participants);
     });
@@ -107,6 +107,14 @@ function MeetingHandler(meetingId) {
       callButton.removeAttr('disabled');
       shareLink.removeAttr('disabled');
     }, logError);
+  }
+
+  function updateParticipants(data) {
+    participants.forEach(function (participant) {
+      if (data.indexOf(participant) === -1) {
+        $('#video-' + participant).remove();
+      }
+    })
   }
 
   function logError(error) {

@@ -123,6 +123,7 @@ input[type=button]:active {
     list-style-type: none;
     padding: 10px;
     margin: 0;
+    overflow-y: scroll;
 }
 
 .message-container li {

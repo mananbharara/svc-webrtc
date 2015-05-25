@@ -1,5 +1,5 @@
-<div class="chat-box">
-  <ul class="message-container">
+<div class="chat-box" on-click="focusOnText">
+  <ul id="message-container" class="message-container">
     {{#messages}}
     <li>
       <span>{{this.from}} </span>
@@ -9,6 +9,6 @@
   </ul>
 
   <div class="text-container">
-    <input placeholder="Message goes here..." type="text" value="{{message}}" on-keypress="send" />
+    <input id="text-field" placeholder="Message goes here..." type="text" value="{{message}}" on-keypress="send" />
   </div>
 </div>

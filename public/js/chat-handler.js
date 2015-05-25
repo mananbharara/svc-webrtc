@@ -26,5 +26,8 @@ function ChatHandler(userContext) {
   userContext.socket.on('message', function (message) {
     console.log(message);
     messages.push(message);
+
+    var $meetingContainer = $('#message-container');
+    $meetingContainer.scrollTop($meetingContainer[0].scrollHeight);
   });
 }

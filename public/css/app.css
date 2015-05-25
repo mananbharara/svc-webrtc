@@ -115,7 +115,7 @@ input[type=button]:active {
 }
 
 .message-container {
-    height: 235px;
+    height: 225px;
     background-color: #072836;
     color: white;
     font-family: 'Arial', sans-serif;

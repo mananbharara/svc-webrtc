@@ -34,8 +34,7 @@ div#video-container {
     position: fixed;
     bottom: 0;
     right: 2%;
-    height: 150px;
-    width: 200px;
+    width: 15%;
     z-index: 5;
     margin-bottom: 20px;
 }
@@ -56,7 +55,7 @@ video {
 
 button {
     height: 60px;
-    background-color: #43AE79;
+    background-color: #00b2ff;
     color: white;
     font-size: 2.5em;
     margin: 20px 0;
@@ -67,7 +66,7 @@ button {
 }
 
 #call-button {
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Arial', sans-serif;
     width: 80%;
     border-radius: 4px 0 0 4px;
 }
@@ -104,4 +103,66 @@ button:disabled, button:disabled:active {
 
 input[type=button]:active {
     background-color: #0a3e77;
+}
+
+.chat-box {
+    position: fixed;
+    right: 20%;
+    bottom: 0;
+    height: 275px;
+    width: 240px;
+    background-color: orange;
+}
+
+.message-container {
+    height: 235px;
+    background-color: #072836;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.8em;
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+}
+
+.message-container li {
+    padding: 3px 0;
+}
+
+.message-container li span {
+    font-weight: bold;
+}
+
+.text-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.text-container input {
+    height: 30px;
+    font-size: 1em;
+    line-height: 1.5em;
+    padding: 0 0 0 2%;
+    display: block;
+    width: 98%;
+    border-width: 0;
+}
+
+.text-container input::-webkit-input-placeholder {
+    font-size: 0.8em;
+    color: #939393;
+    font-style: italic;
+}
+
+.text-container input::-moz-placeholder {
+    font-size: 0.8em;
+    color: #939393;
+    font-style: italic;
+}
+
+.text-container input:-ms-input-placeholder {
+    font-size: 0.8em;
+    color: #939393;
+    font-style: italic;
 }

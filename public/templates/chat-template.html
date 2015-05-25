@@ -1,0 +1,14 @@
+<div class="chat-box">
+  <ul class="message-container">
+    {{#messages}}
+    <li>
+      <span>{{this.from}} </span>
+      {{this.message}}
+    </li>
+    {{/messages}}
+  </ul>
+
+  <div class="text-container">
+    <input placeholder="Message goes here..." type="text" value="{{message}}" on-keypress="send" />
+  </div>
+</div>

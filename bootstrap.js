@@ -50,6 +50,10 @@ io.sockets.on('connection', function (socket) {
     });
   });
 
+  socket.on('message', function (data) {
+    io.to(socket.meetingId).emit('message', data);
+  });
+
   function sendToSocket(socketId, message) {
     var socket = io.sockets.connected[socketId];
     if (!socket) {

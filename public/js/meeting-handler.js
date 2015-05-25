@@ -1,22 +1,25 @@
 function MeetingHandler(meetingId) {
-  var localStream, me, socket, calls = {}, answers = {}, participants = [];
+  var localStream, calls = {}, answers = {}, participants = [], userContext = {userId: undefined, socket: undefined};
 
   setLocalStream();
   setupSocketMessaging();
+  ChatHandler(userContext);
 
   $('#call-button').click(function () {
     start();
   });
+
   $('#share-link').click(function () {
     window.prompt("Use Ctrl+C or Cmd+C to copy. Then press enter.", location.href);
   });
+
 
   function setupPeerConnectionObject(remote, fromCaller) {
     var pc = new RTCPeerConnection(iceServers, optional);
 
     pc.onicecandidate = function (evt) {
       if (evt.candidate && (evt.candidate.candidate.indexOf('relay') == -1)) {
-        socket.emit('ice candidate', {fromCaller: fromCaller, from: me, to: remote, "candidate": evt.candidate});
+        userContext.socket.emit('ice candidate', {fromCaller: fromCaller, from: userContext.userId, to: remote, "candidate": evt.candidate});
       }
     };
 
@@ -34,11 +37,11 @@ function MeetingHandler(meetingId) {
   }
 
   function setupSocketMessaging() {
-    socket = io.connect(location.origin, {transports: ['websocket']});
+    userContext.socket = socket = io.connect(location.origin, {transports: ['websocket']});
 
     socket.on('connect', function () {
       console.log('Connection established');
-      me = socket.io.engine.id;
+      userContext.userId = socket.io.engine.id;
       socket.emit('join', {meetingId: meetingId});
     });
 
@@ -72,12 +75,12 @@ function MeetingHandler(meetingId) {
 
       pc.createOffer(function (desc) {
         pc.setLocalDescription(desc);
-        socket.emit('offer', {"from": me, "to": remoteUser, "offerSDP": desc});
+        userContext.socket.emit('offer', {"from": userContext.userId, "to": remoteUser, "offerSDP": desc});
       }, logError);
     }
 
     participants.forEach(function (remoteUser) {
-      if (remoteUser === me || (remoteUser in calls))
+      if (remoteUser === userContext.userId || (remoteUser in calls))
         return;
 
       call(remoteUser);
@@ -91,7 +94,7 @@ function MeetingHandler(meetingId) {
 
     pc.createAnswer(function (desc) {
       pc.setLocalDescription(desc);
-      socket.emit('answer', {'from': me, 'to': offer.from, "answerSDP": desc});
+      userContext.socket.emit('answer', {'from': userContext.userId, 'to': offer.from, "answerSDP": desc});
     }, logError);
 
     start();

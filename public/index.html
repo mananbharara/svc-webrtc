@@ -7,22 +7,30 @@
   <link rel="stylesheet" href="css/app.css">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
-  <script type="text/javascript" src="js/path.js"></script>
-  <script type="text/javascript" src="js/adapter.js"></script>
+  <script type="text/javascript" src="vendor/ractive.min.js"></script>
+  <script type="text/javascript" src="vendor/path.js"></script>
+  <script type="text/javascript" src="vendor/adapter.js"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
   <script type="text/javascript" src="js/ice-servers.js"></script>
   <script type="text/javascript" src="js/bootstrap.js"></script>
   <script type="text/javascript" src="js/routes.js"></script>
   <script type="text/javascript" src="js/meeting-handler.js"></script>
+  <script type="text/javascript" src="js/chat-handler.js"></script>
 </head>
 <body>
+
 <div id="button-container">
   <button id="call-button" disabled>START</button>
   <button id="share-link" disabled></button>
   <div class="clear-both"></div>
 </div>
+
 <div id="video-container">
   <video id="local-video" autoplay></video>
 </div>
+
+<div id="chat-container"></div>
+
 </body>
 </html>

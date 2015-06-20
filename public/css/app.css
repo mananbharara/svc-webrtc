@@ -92,15 +92,35 @@ input[type=button]:active {
     position: fixed;
     right: 20%;
     bottom: 0;
-    height: 275px;
     width: 240px;
-    background-color: orange;
+    border: 1px solid grey;
+}
+
+#chat-content {
+    height: 255px;
+}
+
+.minimize-control {
+    display: inline-block;
+    padding-left: 10px;
+    float: right;
+}
+
+#chat-box-handlers {
+    padding: 5px 15px;
+    background-color: black;
+    color: white;
+    font-weight: 500;
+    font-style: italic;
+    height: 20px;
+    border-bottom: 1px solid grey;
+    cursor: pointer;
 }
 
 .message-container {
     height: 225px;
-    background-color: #072836;
-    color: white;
+    background-color: white;
+    color: black;
     font-family: 'Arial', sans-serif;
     font-size: 0.8em;
     list-style-type: none;
@@ -121,6 +141,7 @@ input[type=button]:active {
     position: absolute;
     bottom: 0;
     width: 100%;
+    border-top: 1px solid grey;
 }
 
 .text-container input {

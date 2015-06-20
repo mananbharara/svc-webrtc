@@ -1,14 +1,22 @@
 <div class="chat-box" on-click="focusOnText">
-  <ul id="message-container" class="message-container">
-    {{#messages}}
-    <li>
-      <span>{{this.from}} </span>
-      {{this.message}}
-    </li>
-    {{/messages}}
-  </ul>
-
-  <div class="text-container">
-    <input id="text-field" placeholder="Message goes here..." type="text" value="{{message}}" on-keypress="send" />
+  <div id="chat-box-handlers" on-click="minimize">
+    <span>Chat</span>
+    <span class="minimize-control">&minus;</span>
   </div>
+  {{#!minimized}}
+  <div id="chat-content">
+    <ul id="message-container" class="message-container">
+      {{#messages}}
+      <li>
+        <span>{{this.from}} </span>
+        {{this.message}}
+      </li>
+      {{/messages}}
+    </ul>
+
+    <div class="text-container">
+      <input id="text-field" placeholder="Message goes here..." type="text" value="{{message}}" on-keypress="send"/>
+    </div>
+  </div>
+  {{/minimized}}
 </div>

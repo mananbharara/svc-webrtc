@@ -9,7 +9,8 @@ function ChatHandler(userContext) {
       template: template,
       data: {
         name: 'Manan',
-        messages: messages
+        messages: messages,
+        minimized: false
       }
     });
 
@@ -19,6 +20,10 @@ function ChatHandler(userContext) {
         userContext.socket.emit('message', {"from": userContext.userId, "message": ractive.get('message')});
         ractive.set('message', '');
       }
+    });
+
+    ractive.on('minimize', function () {
+      ractive.set('minimized', !ractive.get('minimized'));
     });
   }
 

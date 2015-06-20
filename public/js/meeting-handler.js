@@ -13,24 +13,76 @@ function MeetingHandler(meetingId) {
     window.prompt("Use Ctrl+C or Cmd+C to copy. Then press enter.", location.href);
   });
 
-
   function setupPeerConnectionObject(remote, fromCaller) {
     var pc = new RTCPeerConnection(iceServers, optional);
 
     pc.onicecandidate = function (evt) {
       if (evt.candidate && (evt.candidate.candidate.indexOf('relay') == -1)) {
-        userContext.socket.emit('ice candidate', {fromCaller: fromCaller, from: userContext.userId, to: remote, "candidate": evt.candidate});
+        userContext.socket.emit('ice candidate', {
+          fromCaller: fromCaller,
+          from: userContext.userId,
+          to: remote,
+          "candidate": evt.candidate
+        });
       }
     };
 
     pc.onaddstream = function (evt) {
+      var fullScreen = false;
+      function videoName() {
+        return 'video-' + remote;
+      }
+
       var remoteVideo = $('<video>').attr({
-        id: 'video-' + remote,
+        id: videoName(),
         autoplay: true,
         src: URL.createObjectURL(evt.stream)
       }).addClass('remote-video');
 
-      $('#video-container').append(remoteVideo);
+      var $remoteVideoContainer = $('<div class="remote-video-container">' +
+      '<button id=full-screen' + videoName() + '></button>' +
+      '</div>').append(remoteVideo);
+
+      $('#video-container').append($remoteVideoContainer);
+
+      var $fullScreenButton = $('#full-screen' + videoName());
+      var $video = $('#' + videoName());
+
+      function applyFullScreenConfig() {
+        $video.height($(window).height() + 'px');
+        $video.width($(window).width() + 'px');
+        $remoteVideoContainer.addClass('full-screen');
+        fullScreen = true;
+      }
+
+      var timeoutId;
+      var resizeFunction = function () {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(function () {
+          applyFullScreenConfig();
+        }, 150);
+      };
+
+      function fullScreenOn() {
+        var el = document.documentElement, rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen;
+        rfs.call(el);
+        applyFullScreenConfig();
+        $(window).on('resize', resizeFunction);
+      }
+
+      function fullScreenOff() {
+        var el = document, rfs = el.cancelFullScreen || el.webkitExitFullscreen || el.mozCancelFullScreen;
+        rfs.call(el);
+        $video.height('');
+        $video.width('');
+        $remoteVideoContainer.removeClass('full-screen');
+        fullScreen = false;
+        $(window).off('resize', resizeFunction);
+      }
+
+      $fullScreenButton.click(function () {
+        fullScreen ? fullScreenOff() : fullScreenOn();
+      });
     };
 
     return pc;

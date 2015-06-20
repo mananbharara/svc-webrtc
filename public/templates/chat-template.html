@@ -1,6 +1,10 @@
 <div class="chat-box" on-click="focusOnText">
   <div id="chat-box-handlers" on-click="minimize">
+    {{#if !minimized}}
     <span>Chat</span>
+    {{else}}
+    <span>Last: "{{messages[messages.length - 1].message}}"</span>
+    {{/if}}
     <span class="minimize-control">&minus;</span>
   </div>
   {{#!minimized}}

@@ -4,6 +4,7 @@ function MeetingHandler(meetingId) {
   setLocalStream();
   setupSocketMessaging();
   ChatHandler(userContext);
+  ThemeHandler();
 
   $('#call-button').click(function () {
     start();

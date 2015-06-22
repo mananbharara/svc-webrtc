@@ -208,3 +208,31 @@ input[type=button]:active {
     color: #939393;
     font-style: italic;
 }
+
+.action-buttons {
+    position: relative;
+}
+
+.theme-buttons {
+    position: absolute;
+    right: 5%;
+    top: 30%;
+}
+
+.color-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: inline-block;
+    border: 2px solid grey;
+    box-shadow: 0 0 0.5em black;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.color-button.theme-dark {
+    background-image: url('../images/grey_wash_wall.png');
+}
+.color-button.theme-white {
+    background: #d0d0d0;
+}

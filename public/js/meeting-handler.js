@@ -28,7 +28,11 @@ function MeetingHandler(meetingId) {
     };
 
     pc.onaddstream = function (evt) {
+      var videoSrc = URL.createObjectURL(evt.stream);
+
+
       var fullScreen = false;
+
       function videoName() {
         return 'video-' + remote;
       }
@@ -36,8 +40,9 @@ function MeetingHandler(meetingId) {
       var remoteVideo = $('<video>').attr({
         id: videoName(),
         autoplay: true,
-        src: URL.createObjectURL(evt.stream)
-      }).addClass('remote-video');
+        src: videoSrc,
+        'class': 'remote-video'
+      });
 
       var $remoteVideoContainer = $('<div class="remote-video-container">' +
       '<button id=full-screen' + videoName() + '></button>' +
@@ -153,12 +158,34 @@ function MeetingHandler(meetingId) {
   }
 
   function setLocalStream() {
+    var $window = $(window);
     var localVideo = $('#local-video'), callButton = $('#call-button'), shareLink = $('#share-link');
 
     localVideo.prop('muted', true);
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
       localStream = stream;
       localVideo.attr({src: URL.createObjectURL(localStream)});
+
+      localVideo.on('mousedown', mouseDown);
+      $window.on('mouseup', mouseUp);
+
+      var offset = {};
+      function mouseDown(e) {
+        var absoluteOffset = localVideo.offset();
+        offset.x = e.clientX - absoluteOffset.left;
+        offset.y = e.clientY - absoluteOffset.top;
+        $window.on('mousemove', videoMove);
+        e.preventDefault();
+      }
+
+      function mouseUp() {
+        $window.off('mousemove', videoMove);
+      }
+
+      function videoMove(e) {
+        localVideo.css({top: (e.clientY - offset.y) + 'px', left: (e.clientX - offset.x) + 'px'});
+      }
+
       callButton.removeAttr('disabled');
       shareLink.removeAttr('disabled');
     }, logError);

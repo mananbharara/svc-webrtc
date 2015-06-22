@@ -10,7 +10,7 @@ function ChatHandler(userContext) {
       data: {
         name: 'Manan',
         messages: messages,
-        minimized: false
+        minimized: true
       }
     });
 

@@ -1,10 +1,15 @@
 function MeetingHandler(meetingId) {
-  var localStream, calls = {}, answers = {}, participants = [], userContext = {userId: undefined, socket: undefined};
+  var localStream, calls = {}, answers = {}, participants = [], userContext = {
+    userId: undefined,
+    socket: undefined,
+    participants: participants
+  };
 
   setLocalStream();
   setupSocketMessaging();
   ChatHandler(userContext);
   ThemeHandler();
+  var navHandler = NavHandler(userContext);
 
   $('#call-button').click(function () {
     start();
@@ -99,14 +104,15 @@ function MeetingHandler(meetingId) {
 
     socket.on('connect', function () {
       console.log('Connection established');
-      userContext.userId = socket.io.engine.id;
+      userContext.userId = localStorage.getItem('username') || socket.io.engine.id;
       socket.emit('join', {meetingId: meetingId});
     });
 
     socket.on('participants', function (data) {
       updateParticipants(data);
-      participants = data;
-      console.log('Participants in this meeting: ', participants);
+      userContext.participants = data;
+      navHandler.updateParticipants(userContext.participants);
+      console.log('Participants in this meeting: ', userContext.participants);
     });
 
     socket.on('offer', function (offer) {
@@ -137,7 +143,7 @@ function MeetingHandler(meetingId) {
       }, logError);
     }
 
-    participants.forEach(function (remoteUser) {
+    userContext.participants.forEach(function (remoteUser) {
       if (remoteUser === userContext.userId || (remoteUser in calls))
         return;
 
@@ -171,6 +177,7 @@ function MeetingHandler(meetingId) {
       $window.on('mouseup', mouseUp);
 
       var offset = {};
+
       function mouseDown(e) {
         var absoluteOffset = localVideo.offset();
         offset.x = e.clientX - absoluteOffset.left;
@@ -193,7 +200,7 @@ function MeetingHandler(meetingId) {
   }
 
   function updateParticipants(data) {
-    participants.forEach(function (participant) {
+    userContext.participants.forEach(function (participant) {
       if (data.indexOf(participant) === -1) {
         $('#video-' + participant).remove();
       }

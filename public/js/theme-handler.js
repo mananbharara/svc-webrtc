@@ -14,7 +14,7 @@ function ThemeHandler() {
     });
 
     ractive.on('themeWhite', function () {
-      $('body').css({'background': '#d0d0d0'});
+      $('body').css({'background': 'rgba(237, 237, 237, 0.72)'});
     });
   }
 }

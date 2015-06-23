@@ -5,6 +5,49 @@ html, body {
 body {
     margin: 0;
     background-image: url('../images/grey_wash_wall.png');
+    font-family: arial, sans-serif;
+}
+
+#nav nav {
+    width: 0;
+    height: 100%;
+    float: left;
+    position: absolute;
+    background: rgba(237, 237, 237, 0.72);
+    box-shadow: 0 0 1em black;
+    z-index: 200;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+#nav nav.expanded {
+    width: 20%;
+}
+
+.nav-content {
+    padding: 10px;
+}
+
+.participants {
+    padding: 10px 2px;
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+#username {
+    font-size: 1em;
+    width: 90%;
+    background: transparent;
+    border: none;
+}
+
+#username:hover {
+    border: 1px solid #a0a0a0;
+}
+
+#greeting {
+    font-size: 2em;
+    color: #0082B2;
 }
 
 div#video-container {
@@ -86,7 +129,6 @@ video {
 }
 
 #call-button {
-    font-family: 'Arial', sans-serif;
     width: 80%;
     border-radius: 4px 0 0 4px;
 }
@@ -134,7 +176,7 @@ input[type=button]:active {
 }
 
 #chat-content {
-    height: 255px;
+    height: 275px;
 }
 
 .minimize-control {
@@ -158,7 +200,6 @@ input[type=button]:active {
     height: 225px;
     background-color: white;
     color: black;
-    font-family: 'Arial', sans-serif;
     font-size: 0.8em;
     list-style-type: none;
     padding: 10px;
@@ -182,7 +223,7 @@ input[type=button]:active {
 }
 
 .text-container input {
-    height: 30px;
+    height: 29px;
     font-size: 1em;
     line-height: 1.5em;
     padding: 0 0 0 2%;
@@ -234,5 +275,5 @@ input[type=button]:active {
     background-image: url('../images/grey_wash_wall.png');
 }
 .color-button.theme-white {
-    background: #d0d0d0;
+    background: rgba(237, 237, 237, 0.72);
 }

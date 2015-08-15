@@ -6,3 +6,4 @@
 *.class
 .idea/workspace.xml
 node_modules/*
+.idea/

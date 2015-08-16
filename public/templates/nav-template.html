@@ -1,15 +1,15 @@
 <button on-click="navout"></button>
 <nav>
   <div class="nav-content">
-    <div id="greeting">Welcome<input id="username" type="text" value="{{userContext.userId}}" on-keypress="setOnEnter"/>
+    <div id="greeting">Welcome<input id="username" type="text" value="Manan" on-keypress="setOnEnter"/>
     </div>
     <div class="participants">
-      {{#if userContext.participants.length === 1}}
+      {{#if participants.length === 1}}
       No others
-      {{elseif userContext.participants.length === 2}}
+      {{elseif participants.length === 2}}
       1 other
       {{else}}
-      {{userContext.participants.length - 1}} others
+      {{participants.length - 1}} others
       {{/if}}
 
     </div>

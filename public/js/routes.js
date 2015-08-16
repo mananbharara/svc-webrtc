@@ -5,7 +5,7 @@ Path.map('#/').to(function () {
 });
 
 Path.map('#/:meetingId').to(function() {
-  MeetingHandler(this.params.meetingId);
+  appHandler(this.params.meetingId);
 });
 
 Path.root('#/');

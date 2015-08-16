@@ -1,0 +1,22 @@
+<div id="nav"></div>
+<div class="action-buttons">
+  <div id="button-container">
+    <button id="call-button" on-click="start" disabled="{{!gotLocalStream}}">START</button>
+    <button id="share-link" on-click="share" disabled="{{!gotLocalStream}}"></button>
+    <div class="clear-both"></div>
+  </div>
+  <div id="theme-button-container"></div>
+</div>
+
+<div id="video-container">
+  <video id="local-video" autoplay></video>
+
+  {{#remotes}}
+  <div class="remote-video-container">
+    <button on-click="this.fullscreen ? this.fullScreenOff() : this.fullScreenOn()" class="full-screen-button"></button>
+    <video id="{{this.videoName()}}" src="{{this.src}}" autoplay class="remote-video"></video>
+  </div>
+  {{/remotes}}
+</div>
+
+<div id="chat-container"></div>

@@ -1,5 +1,5 @@
-function ChatHandler(userContext) {
-  var messages = [], ractive;
+function ChatHandler() {
+  var ractive;
 
   $.ajax('templates/chat-template.html').done(loadRactive);
 
@@ -8,8 +8,8 @@ function ChatHandler(userContext) {
       el: '#chat-container',
       template: template,
       data: {
-        name: 'Manan',
-        messages: messages,
+        name: app.get('user.username'),
+        messages: [],
         minimized: true
       }
     });
@@ -17,7 +17,7 @@ function ChatHandler(userContext) {
     ractive.on('send', function (e) {
       var keyCode = e.original.keyCode || e.original.which;
       if (keyCode == 13) {
-        userContext.socket.emit('message', {"from": userContext.userId, "message": ractive.get('message')});
+        app.get('socket').emit('message', {"from": app.get('user'), "message": ractive.get('message')});
         ractive.set('message', '');
       }
     });
@@ -28,9 +28,9 @@ function ChatHandler(userContext) {
   }
 
 
-  userContext.socket.on('message', function (message) {
+  app.get('socket').on('message', function (message) {
     console.log(message);
-    messages.push(message);
+    ractive.get('messages').push(message);
 
     var $meetingContainer = $('#message-container');
     $meetingContainer.scrollTop($meetingContainer[0].scrollHeight);

@@ -1,4 +1,4 @@
-function NavHandler(userContext) {
+function NavHandler() {
   var ractive;
 
   $.ajax('templates/nav-template.html').done(loadRactive);
@@ -8,12 +8,13 @@ function NavHandler(userContext) {
       el: '#nav',
       template: template,
       data: {
-        userContext: userContext
+        username: app.get('user.username')
       }
     });
 
-    ractive.observe('userContext.userId', function (newVal) {
+    ractive.observe('username', function (newVal) {
       localStorage.setItem('username', newVal);
+      app.set('user.username', newVal);
     });
 
     ractive.on('setOnEnter', function (e) {
@@ -23,14 +24,12 @@ function NavHandler(userContext) {
       }
     });
 
-    ractive.on('navout', function() {
+    ractive.on('navout', function () {
       $('nav').toggleClass('expanded')
     });
+
+    app.observe('participants', function (newVal) {
+      ractive.set('participants', newVal);
+    })
   }
-
-  var updateParticipants = function (participants) {
-    ractive.set('userContext.participants', participants);
-  };
-
-  return {updateParticipants: updateParticipants};
 }

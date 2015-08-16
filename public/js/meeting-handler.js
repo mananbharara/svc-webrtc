@@ -1,5 +1,5 @@
 function MeetingHandler(meetingId, app) {
-  var calls = {}, answers = {}, user = app.get('user'), meetingId = app.get('meetingId');
+  var user = app.get('user'), meetingId = app.get('meetingId'), connections = {};
 
   new LocalVideo();
   setupSocketMessaging();
@@ -63,20 +63,17 @@ function MeetingHandler(meetingId, app) {
     socket.on('ice candidate', function (iceCandidate) {
       var otherUserId = iceCandidate.from.userId;
 
-      if (iceCandidate.fromCaller)
-        answers[otherUserId].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
-      else
-        calls[otherUserId].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
+      connections[otherUserId].addIceCandidate(new RTCIceCandidate(iceCandidate.candidate));
     });
 
     socket.on('answer', function (answer) {
-      calls[answer.from.userId].setRemoteDescription(new RTCSessionDescription(answer.answerSDP));
+      connections[answer.from.userId].setRemoteDescription(new RTCSessionDescription(answer.answerSDP));
     });
   }
 
   function start() {
     function call(remoteUser) {
-      var pc = calls[remoteUser] = setupPeerConnectionObject(remoteUser, true);
+      var pc = connections[remoteUser] = setupPeerConnectionObject(remoteUser, true);
 
       pc.addStream(app.get('localStream'));
 
@@ -87,7 +84,7 @@ function MeetingHandler(meetingId, app) {
     }
 
     app.get('participants').forEach(function (remoteUser) {
-      if (remoteUser === app.get('user.userId') || (remoteUser in calls))
+      if (remoteUser === app.get('user.userId') || (remoteUser in connections))
         return;
 
       call(remoteUser);
@@ -96,7 +93,9 @@ function MeetingHandler(meetingId, app) {
 
   function answer(offer) {
     var callerId = offer.from.userId;
-    var pc = answers[callerId] = setupPeerConnectionObject(callerId, false);
+    var pc = connections[callerId] = setupPeerConnectionObject(callerId, false);
+
+    pc.addStream(app.get('localStream'));
 
     pc.setRemoteDescription(new RTCSessionDescription(offer.offerSDP));
 

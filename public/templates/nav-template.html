@@ -1,7 +1,7 @@
 <button on-click="navout"></button>
 <nav>
   <div class="nav-content">
-    <div id="greeting">Welcome<input id="username" type="text" value="Manan" on-keypress="setOnEnter"/>
+    <div id="greeting">Welcome<input id="username" type="text" value="{{username}}" on-keypress="setOnEnter"/>
     </div>
     <div class="participants">
       {{#if participants.length === 1}}

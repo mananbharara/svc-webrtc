@@ -8,7 +8,7 @@ function NavHandler() {
       el: '#nav',
       template: template,
       data: {
-        username: app.get('user.username')
+        username: localStorage.getItem('username')
       }
     });
 
